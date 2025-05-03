@@ -50,4 +50,4 @@ app.post('/scrape', upload.single('file'), (req, res) => {
     });
 });
 
-app.listen(8080, () => console.log('Server running on http://localhost:8080'));
+app.listen(7000, () => console.log('Server running on http://localhost:7000'));

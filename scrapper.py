@@ -1,24 +1,31 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium_recaptcha_solver import RecaptchaSolver
+from selenium.webdriver.chrome.service import Service
 from fp.fp import FreeProxy
 import time
 import pandas as pd
 
 
 def launch_browser():
-        proxy = FreeProxy().get()
+#        proxy = FreeProxy().get()
 
         options = webdriver.FirefoxOptions()
         options.add_argument('--headless')  # run without GUI
         options.add_argument('--no-sandbox')
         options.add_argument("--disable-extensions")
-        options.add_argument(f'--proxy-server={proxy}')
+#        options.add_argument(f'--proxy-server={proxy}')
+        
+        print("Starting driver")
+        service = Service("/usr/local/bin/chromedriver")
+        driver = webdriver.Chrome(service=service, options=options)
+        print("Driver Started")
 
-        driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(), options=options)
+        driver = webdriver.Chrome(service=service, options=options)
         return driver
 
 
@@ -30,6 +37,8 @@ def scrape_result(driver, roll_number, dob, output):
 
         # Wait for Roll Number field and enter roll number
         WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, 'txtRollNo')))
+        print("Successful get to website")
+            
         roll = driver.find_element(By.ID, 'txtRollNo')
         roll.clear()
         roll.send_keys(roll_number)
@@ -134,8 +143,8 @@ def excel_data():
     df[df.columns[7]] = df[df.columns[7]].dt.strftime("%d/%m/%Y") 
     df = df[[df.columns[1], df.columns[7]]]
     # selected_rows = df.iloc[297:352]
-    # for testing purpose only extracting 5 rows
-    selected_rows = df.iloc[297:302]
+    # for testing purpose only extracting 3 rows
+    selected_rows = df.iloc[297:300]
     return selected_rows.values.tolist()
 
 

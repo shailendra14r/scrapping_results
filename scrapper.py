@@ -14,7 +14,7 @@ import pandas as pd
 def launch_browser():
 #        proxy = FreeProxy().get()
 
-        options = webdriver.FirefoxOptions()
+        options = Options()
         options.add_argument('--headless')  # run without GUI
         options.add_argument('--no-sandbox')
         options.add_argument("--disable-extensions")
